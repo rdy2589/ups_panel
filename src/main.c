@@ -10,6 +10,7 @@
 #include "debug.h"
 #include "state_machine.h"
 #include "common_type.h"
+#include "lcd.h"
 
 
 void one_sec_task(int64_t itime);
@@ -38,6 +39,7 @@ void system_init(void)
 int main(void)
 {
     system_init();
+
 
     int64_t itime = get_itime();
 

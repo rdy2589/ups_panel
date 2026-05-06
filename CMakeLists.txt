@@ -82,6 +82,7 @@ target_sources(${TARGET} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/app_time.c
     ${CMAKE_SOURCE_DIR}/src/timer_impl.c
     ${CMAKE_SOURCE_DIR}/src/state_machine.c
+    ${CMAKE_SOURCE_DIR}/src/lcd.c
 
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/ARM/startup_gd32f30x_hd.S
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/system_gd32f30x.c
@@ -93,6 +94,7 @@ target_sources(${TARGET} PRIVATE
     ${CMAKE_SOURCE_DIR}/GD32F30x_standard_peripheral/Source/gd32f30x_timer.c
     ${CMAKE_SOURCE_DIR}/GD32F30x_standard_peripheral/Source/gd32f30x_dma.c
     ${CMAKE_SOURCE_DIR}/GD32F30x_standard_peripheral/Source/gd32f30x_adc.c
+    ${CMAKE_SOURCE_DIR}/GD32F30x_standard_peripheral/Source/gd32f30x_i2c.c
     #${CMAKE_SOURCE_DIR}/GD32F30x_standard_peripheral/Source/gd32f30x_gpio.c
     #${CMAKE_SOURCE_DIR}/pack/GigaDevice/GD32F30x_DFP.2.0.0/Device/Source/system_gd32f30x.c
     ${CMAKE_SOURCE_DIR}/src/gd32f30x_eval.c

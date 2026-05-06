@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "relay.h"
 #include "adc.h"
+#include "lcd.h"
 
 #include "state_machine.h"
 
@@ -29,33 +30,39 @@ void main_state_task(int64_t itime)
             print_time_s_ns(itime);
             printf("%s() [%u]\n", __func__, systemState);
 
-            generate_sin_table();
+            //generate_sin_table();
 
             nvic_config();
             __enable_irq();  // Команда CMSIS
 
-            adc_config();
+            //adc_config();
 
             Delay_Ms(100);
-            relay_config();
+            //relay_config();
 
             
 
-            zero_detect_config();
-            period_timer_config();
+            //zero_detect_config();
+            //period_timer_config();
             //config
-            tim1_gpio_config();
-            tim1_config();
+           // tim1_gpio_config();
+            //tim1_config();
 
-            tim0_gpio_config();
-            tim0_config();
+           // tim0_gpio_config();
+            //();
             Delay_Ms(10);
-            charge_relay_enable();
+            //charge_relay_enable();
 
             //debug
             //inpit_relay_enable();
-            input_relay_disable();
+            //input_relay_disable();
+            lcd_init();
+            lcd_test();
 
+            while(1)
+            {
+                Delay_Ms(1000);
+            }
             systemState = WAIT_MODE;
         }
         break;
