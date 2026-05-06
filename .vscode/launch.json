@@ -1,0 +1,67 @@
+/*
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "device": "GD32F30x", 
+            "name": "Debug: stlink",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "servertype": "stlink",
+            "interface": "swd",
+            "executable": "D:/00_workgit/ups/ups_panel/cmake_build/ups_panel.elf",
+            //"armToolchainPath": "D:/00_workgit/gd32_tools/GNU Tools ARM Embedded/xpack-arm-none-eabi-gcc/9.2.1-1.1/bin",
+            "armToolchainPath": "D:/00_workgit/xpack-arm-none-eabi-gcc-14.2.1-1.1/bin/",
+            "toolchainPrefix": "arm-none-eabi",
+            //"runToMain": true,
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            "serverpath": "C:/Program Files/STMicroelectronics/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server.win32_2.2.200.202505060755/tools/bin/ST-LINK_gdbserver.exe",
+            "serverArgs": [
+                "--verbose"
+            ],
+            "gdbPath": "D:/00_workgit/xpack-arm-none-eabi-gcc-14.2.1-1.1/bin/arm-none-eabi-gdb.exe",
+            //"configFiles": [
+            //    "C:/Program Files/STMicroelectronics/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server.win32_2.2.200.202505060755/tools/bin/config.txt"
+            //],
+            "svdFile": "D:/00_workgit/ups/ups_panel/pack/GigaDevice/GD32F30x_DFP.2.0.0/SVD/GD32F30x_HD.svd"
+        }
+    ]
+}
+*/
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "device": "GD32F30x", 
+            "name": "Debug: stlink",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "servertype": "openocd",
+            "interface": "swd",
+            "executable": "D:/00_workgit/ups/ups_panel/cmake_build/ups_panel.elf",
+           // "postRestartCommands": [],
+            "preRestartCommands" : [ "load", "enable breakpoint", "monitor reset" ],
+            //"armToolchainPath": "D:/00_workgit/gd32_tools/GNU Tools ARM Embedded/xpack-arm-none-eabi-gcc/9.2.1-1.1/bin",
+            "armToolchainPath": "D:/00_workgit/xpack-arm-none-eabi-gcc-14.2.1-1.1/bin/",
+            "toolchainPrefix": "arm-none-eabi",
+            //"runToMain": true,
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            //"serverpath": "C:/Program Files/STMicroelectronics/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server.win32_2.2.200.202505060755/tools/bin/ST-LINK_gdbserver.exe",
+            "serverpath": "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/bin/openocd.exe",
+            "serverArgs": [
+            //    "--verbose"
+            ],
+            "gdbPath": "D:/00_workgit/xpack-arm-none-eabi-gcc-14.2.1-1.1/bin/arm-none-eabi-gdb.exe",
+            "configFiles": [
+                "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/scripts/interface/stlink.cfg",
+                "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/scripts/target/gd32f30x.cfg"
+                //"C:/Program Files/STMicroelectronics/STM32CubeIDE_1.19.0/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.stlink-gdb-server.win32_2.2.200.202505060755/tools/bin/config.txt"
+            ],
+            "svdFile": "D:/00_workgit/ups/ups_panel/SVD/GD32F30x_HD.svd"
+        }
+    ]
+}

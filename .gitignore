@@ -1,0 +1,14 @@
+# dot files
+/.eide/log
+/.eide.usr.ctx.json
+
+# project out
+/cmake_build
+/build
+/bin
+/obj
+/out
+
+# eide template
+*.ept
+*.eide-template

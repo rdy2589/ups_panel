@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Ninja",
+            "type": "shell",
+            //"command": "rm -r cmake_build/*; cmake -G Ninja -B cmake_build; ninja -C ./cmake_build -v",
+            "command": "rm -r cmake_build/*; cmake -G Ninja -B cmake_build; ninja -C ./cmake_build",
+            //; ls ./cmake_build; cp ./cmake_build/ups_contol.hex ./bin; cp ./cmake_build/ups_panel.bin ./bin; cp ./cmake_build/ups_panel.elf ./bin",
+            //cmake -S . -B build -G "Ninja" -DCMAKE_MAKE_PROGRAM=C:/foobar/ninja.exe
+            "args": [
+               // "cmake -B cmake_build"
+            ],
+            "group": {
+                "kind": "build",
+                //"isDefault": true
+            },
+    //            "problemMatcher": [
+    //                "$gcc"
+    //            ],
+            "detail": "Generated task for building the AVR project using make."
+        },
+
+
+        
+        {
+            "label": "flash",
+            "type": "shell",
+            "command": "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/bin/openocd.exe",
+            "group": "build",
+            "problemMatcher": [],
+            "args": [
+                "-f", "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/scripts/interface/stlink.cfg",      // Конфигурация вашего программатора (ИЗМЕНИТЕ!)
+                "-f", "D:/00_workgit/gd32_tools/OpenOCD/xpack-openocd-0.11.0-3/scripts/target/gd32f30x.cfg",          // Конфигурация вашего чипа (ИЗМЕНИТЕ!)
+                "-c", "program D:/00_workgit/ups/ups_panel/cmake_build/ups_panel.hex verify reset exit" // Команды: прошить, проверить, сброс, выход
+            ],
+        }
+    ]
+}
