@@ -15,9 +15,17 @@
 #include "lcd.h"
 
 #define I2C0_OWN_ADDRESS7      0x72
-#define I2C0_SLAVE_ADDRESS7    0x82
+//#define I2C0_SLAVE_ADDRESS7    0x78
+//#define I2C0_SLAVE_ADDRESS7    0x7A
+#define I2C0_SLAVE_ADDRESS7    0x3C
+//#define I2C0_SLAVE_ADDRESS7    0x3D
+
+/* 1 - only one data byte (either command or RAM data) will follow.
+0 - series of data bytes (either command or RAM data) may follow */
 #define TIC32AN_CONTROL_CMD    0x80U
+
 #define TIC32AN_CONTROL_DATA   0x40U
+
 #define TIC32AN_RAM_SIZE       640U
 #define TIC32AN_VISIBLE_RAM_SIZE 512U
 
@@ -55,24 +63,41 @@ static void i2c_end_write(void)
 void lcd_init(void)
 {
     static const uint8_t tic32an_init_sequence[] = {
-        TIC32AN_CONTROL_CMD, 0x01, /* main command page */
-        TIC32AN_CONTROL_CMD, 0x20, /* chip enable, horizontal addressing */
-        TIC32AN_CONTROL_CMD, 0x09, /* extended page select */
-        TIC32AN_CONTROL_CMD, 0x0C, /* normal display mode */
-        TIC32AN_CONTROL_CMD, 0x05, /* MUX rate: 1/34 */
-        TIC32AN_CONTROL_CMD, 0x14, /* bias system: 1/9 */
-        TIC32AN_CONTROL_CMD, 0x01, /* return to main command page */
-        TIC32AN_CONTROL_CMD, 0x0A, /* extended page select */
-        TIC32AN_CONTROL_CMD, 0x0A, /* voltage multiplier: 2x */
-        TIC32AN_CONTROL_CMD, 0x20, /* temperature coefficient: 0 */
-        TIC32AN_CONTROL_CMD, 0x05, /* voltage multiplier on, low VLCD */
-        TIC32AN_CONTROL_CMD, 0xC4  /* VLCD set */
+        TIC32AN_CONTROL_CMD, 0x01, /* Co + H[1:0] independent command; select function and RAM command page (H[1:0] = 00) */
+        TIC32AN_CONTROL_CMD, 0x22, /* Co + chip enable(PD=0), vertical addressing(PV=1) */
+        TIC32AN_CONTROL_CMD, 0x09, /* Co + function and RAM command page select display setting command page H[1:0] = 01 */
+        TIC32AN_CONTROL_CMD, 0x0C, /* Co + display setting command page; set normal mode(D = 1; IM = 0 and E = 0) */
+        TIC32AN_CONTROL_CMD, 0x05, /* Co + select multiplex rate 1:34 */
+        //TIC32AN_CONTROL_CMD, 0x14, /* Co + bias system: 1/9 */
+        TIC32AN_CONTROL_CMD, 0x01, /* Co + H[2:0] independent command; select function and RAM command page H[1:0] = 00 */
+        TIC32AN_CONTROL_CMD, 0x0A, /* Co + function and RAM command page; select HV-gen command page H[1:0] = 10 */
+        TIC32AN_CONTROL_CMD, 0x0B, /* Co + HV-gen command page; select voltage multiplication factor 5 S[1:0] = 11 */
+        //TIC32AN_CONTROL_CMD, 0x0A, /* Co + voltage multiplier: 2x */
+        TIC32AN_CONTROL_CMD, 0x22, /* Co + HV-gen command page; select temperature coefficient 2 TC[2:0] = 010 */
+        //TIC32AN_CONTROL_CMD, 0x20, /* Co + temperature coefficient: 0 */
+        TIC32AN_CONTROL_CMD, 0x07, /* Co + HV-gen command page; select high VLCD programming range (PRS = 1); voltage multiplier off (HVE = 1) */
+        //TIC32AN_CONTROL_CMD, 0x05, /* Co + voltage multiplier on, low VLCD */
+        TIC32AN_CONTROL_CMD, 0xA0  /* Co + HV-gen command page; set VLCD = 7.71 V; VOP[6:0] = 0100000 */
+        //TIC32AN_CONTROL_CMD, 0xC4  /* Co + VLCD set */
     };
     static const uint8_t tic32an_set_home_sequence[] = {
         TIC32AN_CONTROL_CMD, 0x01, /* main command page */
         TIC32AN_CONTROL_CMD, 0x40, /* Y address = 0 */
         TIC32AN_CONTROL_CMD, 0x80  /* X address = 0 */
     };
+
+    static const uint8_t tic32an_draw_PH[] = {
+        TIC32AN_CONTROL_CMD,
+        0x1F,
+        0x05, 
+        0x07,
+        0x00,
+        0x1F,
+        0x04,
+        0x1F,
+    };
+
+
 
     printf("%s()\n", __func__);
     
@@ -101,46 +126,42 @@ void lcd_init(void)
 
     /* display driver init */
     i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_init_sequence, sizeof(tic32an_init_sequence));
-    i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
 
-    i2c_begin_write(I2C0_SLAVE_ADDRESS7);
-    i2c_write_byte(TIC32AN_CONTROL_DATA);
-    for(uint16_t i = 0; i < TIC32AN_RAM_SIZE; ++i) {
-        i2c_write_byte(0x00);
-    }
-    i2c_end_write();
+    //i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
+
+    //i2c_begin_write(I2C0_SLAVE_ADDRESS7);
+    //i2c_write_byte(TIC32AN_CONTROL_DATA);
+    //for(uint16_t i = 0; i < TIC32AN_RAM_SIZE; ++i) {
+    //    i2c_write_byte(0x00);
+    //}
+    //i2c_end_write();
 }
 
 void lcd_test(void)
 {
-    static const uint8_t tic32an_set_home_sequence[] = {
-        TIC32AN_CONTROL_CMD, 0x01, /* main command page */
-        TIC32AN_CONTROL_CMD, 0x40, /* Y address = 0 */
-        TIC32AN_CONTROL_CMD, 0x80  /* X address = 0 */
-    };
-    static const uint8_t square_4x4[] = {
-        0x0FU, 0x0FU, 0x0FU, 0x0FU
-    };
+    // static const uint8_t square_4x4[] = {
+    //     0x0FU, 0x0FU, 0x0FU, 0x0FU
+    // };
 
-    printf("%s()\n", __func__);
+    // printf("%s()\n", __func__);
 
-    gpio_bit_set(LCD_backlight_gpio, LCD_backlight_pin);
+    // gpio_bit_set(LCD_backlight_gpio, LCD_backlight_pin);
 
-    i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
-    i2c_begin_write(I2C0_SLAVE_ADDRESS7);
-    i2c_write_byte(TIC32AN_CONTROL_DATA);
-    for(uint16_t i = 0; i < TIC32AN_VISIBLE_RAM_SIZE; ++i) {
-        i2c_write_byte(0x00);
-    }
-    i2c_end_write();
+    // i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
+    // i2c_begin_write(I2C0_SLAVE_ADDRESS7);
+    // i2c_write_byte(TIC32AN_CONTROL_DATA);
+    // for(uint16_t i = 0; i < TIC32AN_VISIBLE_RAM_SIZE; ++i) {
+    //     i2c_write_byte(0x00);
+    // }
+    // i2c_end_write();
 
-    i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
-    i2c_begin_write(I2C0_SLAVE_ADDRESS7);
-    i2c_write_byte(TIC32AN_CONTROL_DATA);
-    for(uint16_t i = 0; i < sizeof(square_4x4); ++i) {
-        i2c_write_byte(square_4x4[i]);
-    }
-    i2c_end_write();
+    // i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
+    // i2c_begin_write(I2C0_SLAVE_ADDRESS7);
+    // i2c_write_byte(TIC32AN_CONTROL_DATA);
+    // for(uint16_t i = 0; i < sizeof(square_4x4); ++i) {
+    //     i2c_write_byte(square_4x4[i]);
+    // }
+    // i2c_end_write();
 }
 
 
@@ -150,7 +171,7 @@ void i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length)
         return;
     }
 
-    i2c_begin_write(address);
+    i2c_begin_write(address << 1);
     for(uint16_t i = 0; i < length; ++i) {
         i2c_write_byte(data[i]);
     }
