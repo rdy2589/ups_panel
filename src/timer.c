@@ -65,6 +65,9 @@ int64_t soft_timer(struct periodic_task_desc * task_desc, int64_t atime)
 
 //g            if(task_desc->base_ns > atime) break;
             task_desc->start_ns += task_desc->period_ns;
+            //print_time_s_ns(atime);
+            //print_time_s_ns(task_desc->start_ns);
+            //printf("\n");
             if(task_desc->start_ns > atime) break;
 /*
             print_time_s_ns(atime);

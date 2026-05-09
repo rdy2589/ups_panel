@@ -23,6 +23,7 @@ uint16_t mainsStartupCount = 0;
 /* Main state task function */
 void main_state_task(int64_t itime)
 {
+    static uint16_t cnt = 0;
     switch(systemState)
     {
         case SYSTEM_STARTUP:
@@ -37,7 +38,7 @@ void main_state_task(int64_t itime)
 
             //adc_config();
 
-            Delay_Ms(100);
+         //   Delay_Ms(100);
             //relay_config();
 
             
@@ -50,25 +51,32 @@ void main_state_task(int64_t itime)
 
            // tim0_gpio_config();
             //();
-            Delay_Ms(10);
+          //  Delay_Ms(10);
             //charge_relay_enable();
 
             //debug
             //inpit_relay_enable();
             //input_relay_disable();
             lcd_init();
-            lcd_test();
 
-            while(1)
-            {
-                Delay_Ms(1000);
-            }
+
             systemState = WAIT_MODE;
         }
         break;
         case WAIT_MODE:
-            printf("%s() [%u]\n", __func__, systemState);
-            systemState = INVERTER_MODE;
+            cnt++;
+            if(cnt > 1000) cnt = 0;
+            if(!cnt)
+            {
+                
+                int64_t tm = get_sys_time_ns();
+                print_time_s_ns(tm);
+                printf("%s() [%u] %u\n", __func__, systemState, cnt);
+                gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
+                lcd_test();
+
+            }
+           // systemState = INVERTER_MODE;
             break;
 
             if (mainsState == MAINS_NOT_OK)

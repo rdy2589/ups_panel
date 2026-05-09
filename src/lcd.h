@@ -5,6 +5,9 @@
 #define I2C_gpio        GPIOB               //ADC012_IN1
 #define I2C_SCL_pin     GPIO_PIN_6
 #define I2C_SDA_pin     GPIO_PIN_7
+#define RESET_lcd_gpio  GPIOC
+#define RESET_lcd_pin   GPIO_PIN_4
+
 
 #define LCD_backlight_gpio    GPIOB               //ADC012_IN1
 #define LCD_backlight_pin     GPIO_PIN_15
@@ -14,6 +17,8 @@
 void lcd_init(void);
 void i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length);
 void lcd_test(void);
+void lcd_en_backlight(void);
+void lcd_dis_backlight(void);
 // void adc_config(void);
 // uint16_t u_out_offset(void);
 // uint16_t current_offset(void);
