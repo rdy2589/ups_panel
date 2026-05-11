@@ -42,4 +42,6 @@ enum{
     CALCULATION_DONE = 2
 };
 
+extern int debug_i2c;
+
 #endif

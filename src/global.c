@@ -36,3 +36,5 @@ enum inverter_current_state_t inverterCurrentState = INVERTER_CURRENT_UNKNOWN;
 enum driver_state_t inverterDriverState = DRIVER_FAULT_CLEARED;
 enum mains_state_t mainsStartupState = MAINS_STATE_UNKNOWN;
 enum relay_state_t fSwitchRelay = READY_TO_SWITCH;
+
+int debug_i2c = 0;

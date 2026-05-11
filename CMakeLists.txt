@@ -83,6 +83,7 @@ target_sources(${TARGET} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/timer_impl.c
     ${CMAKE_SOURCE_DIR}/src/state_machine.c
     ${CMAKE_SOURCE_DIR}/src/lcd.c
+    ${CMAKE_SOURCE_DIR}/src/encoder.c
 
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/ARM/startup_gd32f30x_hd.S
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/system_gd32f30x.c

@@ -14,6 +14,7 @@
 #include "lcd.h"
 
 #include "state_machine.h"
+#include "encoder.h"
 
 extern uint16_t voltageRMSBuffer[SIN_TABLE_SIZE];
 
@@ -58,12 +59,21 @@ void main_state_task(int64_t itime)
             //inpit_relay_enable();
             //input_relay_disable();
             lcd_init();
+            enc_init();
+            sound_config();
 
 
             systemState = WAIT_MODE;
         }
         break;
         case WAIT_MODE:
+            int16_t enc_position = enc_get_position();
+            static int16_t prev_enc_position = 0;
+            if(enc_position != prev_enc_position)
+            {
+                printf("Encoder position: %d\n", enc_position);
+                prev_enc_position = enc_position;
+            }
             cnt++;
             if(cnt > 1000) cnt = 0;
             if(!cnt)
@@ -74,6 +84,7 @@ void main_state_task(int64_t itime)
                 printf("%s() [%u] %u\n", __func__, systemState, cnt);
                 gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 lcd_test();
+                sound_(0);
 
             }
            // systemState = INVERTER_MODE;

@@ -14,18 +14,21 @@
 #include "global.h"
 #include "lcd.h"
 
-#define I2C0_OWN_ADDRESS7      0x72
-#define I2C0_SLAVE_ADDRESS7    0x3C
+#define I2C0_OWN_ADDRESS7       0x72
+#define I2C0_SLAVE_ADDRESS7     0x3C
 
 
 /* 1 - only one data byte (either command or RAM data) will follow.
 0 - series of data bytes (either command or RAM data) may follow */
-#define TIC32AN_CONTROL_CMD    0x80U
+#define TIC32AN_CONTROL_CMD     0x80U
 
-#define TIC32AN_CONTROL_DATA   0x40U
+#define TIC32AN_CONTROL_DATA    0x40U
 
-#define TIC32AN_RAM_SIZE       640U
-#define TIC32AN_VISIBLE_RAM_SIZE 512U
+#define PCF8531_WIDTH           128
+#define PCF8531_BANKS           4
+
+#define TIC32AN_RAM_SIZE            640U
+#define TIC32AN_VISIBLE_RAM_SIZE    512U
 
 static void i2c_wait_for_bus_idle(void)
 {
@@ -68,25 +71,18 @@ static const uint8_t tic32an_draw_PH[] = {
     // 0x1F,
     // 0x04,
     // 0x1F
-    0x1F,
-    0x00, 
-    0x1F,
     0x00,
+    0x01,
+   // 0x01,
+    0x03,
+    0x07,
+    0x0F,
     0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
-    0x00,
-    0x1F,
+    0x3F,
+    0x7F,
+    0xFF
+    
+    
 };
 
 static const uint8_t tic32an_set_home_sequence[] = {
@@ -121,7 +117,7 @@ void lcd_init(void)
 
 
         TIC32AN_CONTROL_CMD, 0x01, /* Co + H[1:0] independent command; select function and RAM command page (H[1:0] = 00) */
-        TIC32AN_CONTROL_CMD, 0x20, /* Co + chip enable(PD=0), vertical addressing(PV=1) */
+        TIC32AN_CONTROL_CMD, 0x20, /* Co + chip enable(PD=0), horisontal addressing(PV=0) */
         TIC32AN_CONTROL_CMD, 0x09, /* Co + function and RAM command page select display setting command page H[1:0] = 01 */
         TIC32AN_CONTROL_CMD, 0x0C, /* Co + display setting command page; set normal mode(D = 1; IM = 0 and E = 0) */
         TIC32AN_CONTROL_CMD, 0x05, /* Co + select multiplex rate 1:34 */
@@ -194,10 +190,14 @@ void i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length)
     }
 
     i2c_begin_write(address << 1);
-    printf("%02X ", address << 1);
+    if(debug_i2c) {
+        printf("%02X ", address << 1);
+    }
     for(uint16_t i = 0; i < length; ++i) {
         i2c_write_byte(data[i]);
-       // printf("%02X ", data[i]);
+        if(debug_i2c) {
+            printf("%02X ", data[i]);
+        }
     }
     i2c_end_write();
     printf("\n");
