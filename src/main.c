@@ -11,6 +11,7 @@
 #include "state_machine.h"
 #include "common_type.h"
 #include "lcd.h"
+#include "usart.h"
 
 
 void one_sec_task(int64_t itime);
@@ -33,6 +34,8 @@ void system_init(void)
     //init_USART_printf(115200);
     init_USART_printf(250000);
     debug_pin_config(); 
+
+    init_panel_USART(250000);
 }
 
 

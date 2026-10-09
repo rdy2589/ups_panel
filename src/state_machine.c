@@ -15,6 +15,7 @@
 
 #include "state_machine.h"
 #include "encoder.h"
+#include "usart.h"
 
 extern uint16_t voltageRMSBuffer[SIN_TABLE_SIZE];
 
@@ -84,6 +85,8 @@ void main_state_task(int64_t itime)
                 printf("%s() [%u] %u\n", __func__, systemState, cnt);
                 gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 lcd_test();
+                panel_to_pb_transmit("Hello from Panel!\n", 20);
+
                 sound_(0);
 
             }

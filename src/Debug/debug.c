@@ -27,7 +27,7 @@ char *pRX_data = rx_array_data;
     volatile RingBuffer txRing;
      #if(DEBUG ==  DEBUG_UART0)
         //USART_TypeDef *huart = USART0;
-        uint32_t huart = USART0;
+        static uint32_t huart = USART0;
     #endif
     #if(DEBUG ==  DEBUG_UART1)
         USART_TypeDef *huart = USART1;
@@ -849,7 +849,7 @@ void uartStartTxDMA(uint32_t huart, RingBuffer *rb) {
         {
             rb->block_len = len; // save block length
             txRing.state = 1;
-            UART_Transmit_DMA(huart, &(rb->buffer[tail]), len);
+            USART_Transmit_DMA(huart, &(rb->buffer[tail]), len);
 
         }
     }
@@ -857,7 +857,7 @@ void uartStartTxDMA(uint32_t huart, RingBuffer *rb) {
 }
 
 #if(DEBUG ==  DEBUG_UART0)
-void UART_Transmit_DMA(uint32_t huart, uint8_t *data, uint16_t size)
+void USART_Transmit_DMA(uint32_t huart, uint8_t *data, uint16_t size)
 {
     //DMA_Cmd(DMA1_Channel4, DISABLE);
     //DMA_ClearITPendingBit(DMA1_IT_TC4);
@@ -917,7 +917,7 @@ void DMA0_Channel3_IRQHandler(void)
 #endif
 
 #if(DEBUG ==  DEBUG_UART1)
-void UART_Transmit_DMA(USART_TypeDef *huart, uint8_t *data, uint16_t size)
+void USART_Transmit_DMA(USART_TypeDef *huart, uint8_t *data, uint16_t size)
 {
     DMA_Cmd(DMA1_Channel4, DISABLE);
     DMA_ClearITPendingBit(DMA1_IT_TC4);
@@ -956,7 +956,7 @@ void DMA1_Channel4_IRQHandler(void)
 #endif
 
 #if(DEBUG ==  DEBUG_UART5)
-void UART_Transmit_DMA(USART_TypeDef *huart, uint8_t *data, uint16_t size)
+void USART_Transmit_DMA(USART_TypeDef *huart, uint8_t *data, uint16_t size)
 {
     DMA_Cmd(DMA2_Channel4, DISABLE);
     DMA_ClearITPendingBit(DMA2_IT_TC4);

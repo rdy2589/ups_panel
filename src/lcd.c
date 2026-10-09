@@ -13,6 +13,7 @@
 #include "systick.h"
 #include "global.h"
 #include "lcd.h"
+#include "lcd_font.h"
 
 #define I2C0_OWN_ADDRESS7       0x72
 #define I2C0_SLAVE_ADDRESS7     0x3C
@@ -29,6 +30,10 @@
 
 #define TIC32AN_RAM_SIZE            640U
 #define TIC32AN_VISIBLE_RAM_SIZE    512U
+
+
+extern int16_t enc_get_position(void);
+
 
 static void i2c_wait_for_bus_idle(void)
 {
@@ -87,15 +92,19 @@ static const uint8_t tic32an_draw_PH[] = {
 
 static const uint8_t tic32an_set_home_sequence[] = {
     TIC32AN_CONTROL_CMD, 0x01, /* main command page */
-    TIC32AN_CONTROL_CMD, 0x40, /* Y address = 0 */
+    TIC32AN_CONTROL_CMD, 0x41, /* Y address = 0 */
     TIC32AN_CONTROL_CMD, 0x80  /* X address = 0 */
 };
 
 void lcd_test(void)
 {
     printf("%s()\n", __func__);
-   // i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
-    i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_draw_PH, sizeof(tic32an_draw_PH));
+//    i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_set_home_sequence, sizeof(tic32an_set_home_sequence));
+  //  i2c_transmit(I2C0_SLAVE_ADDRESS7, tic32an_draw_PH, sizeof(tic32an_draw_PH));
+    int16_t enc_position = enc_get_position();
+    char buf[100] = {0};
+    sprintf(buf, "Hello, World! %d", enc_position);
+    lcd_puts(3, 0, buf);
 }
 
 void lcd_init(void)

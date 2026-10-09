@@ -37,6 +37,7 @@ OF SUCH DAMAGE.
 #include "common.h"
 
 
+#define SYS_TICK_RELOAD_VAL  ((uint32_t)(SystemCoreClock / 10U))  /* reload value for 100ms interrupts */
 int64_t   sysctrl_tick_time_ns = ((1.0 / 120000000) * NS_PER_SEC);
 
 
@@ -51,8 +52,8 @@ volatile uint64_t sys_time = 0;
 */
 void systick_config(void)
 {
-    /* setup systick timer for 10Hz interrupts = 10ms */
-    if (SysTick_Config(SystemCoreClock / 10U)){
+    /* setup systick timer for 10Hz interrupts = 100ms */
+    if (SysTick_Config(SYS_TICK_RELOAD_VAL)){
         /* capture error */
         while (1){
         }
@@ -105,7 +106,7 @@ void delay_decrement(void)
 //return system time in microseconds
 int64_t get_sys_time_ns(void)
 {
-    return sys_time * 100 * NS_PER_MS + SysTick->VAL * sysctrl_tick_time_ns;
+    return sys_time * 100 * NS_PER_MS +  (SYS_TICK_RELOAD_VAL - SysTick->VAL) * sysctrl_tick_time_ns;
 }
 
 
@@ -119,5 +120,6 @@ uint64_t get_sys_time_us(void)
 uint32_t get_sys_time_ms(void)
 {
     uint64_t time_us = get_sys_time_us();
-    return (uint32_t)(time_us / US_PER_MS);    
+    return (uint32_t)(time_us / US_PER_MS); 
+       
 }
