@@ -7,9 +7,9 @@
 
 
 //printf via DMA
-#define PANEL_USART_DMA             1       //define if DMA used
-//#define PANEL_USART_RX_DMA        1       //define if DMA used
-#define UPANEL_USART                  2       //USART2
+#define PANEL_USART_TX_DMA             1       //define if DMA used
+#define PANEL_USART_RX_DMA            1       //define if DMA used
+#define UPANEL_USART                  1       //USART1
 
 
 #define UPANEL_USART_BUF_SIZE     1024
@@ -23,7 +23,7 @@ enum {
     BUSY = 1
 };
 
-#ifdef PANEL_USART_DMA
+#ifdef PANEL_USART_TX_DMA
 typedef struct {
     uint8_t buffer[UPANEL_USART_BUF_SIZE];
     volatile uint16_t head; // куда пишем
@@ -35,6 +35,7 @@ typedef struct {
 
 uint8_t panel_to_pb_transmit(uint8_t* buf, uint16_t len);
 void init_panel_USART(uint32_t baudrate);
+void panel_receieve(void);
 
 #endif
 #endif // _DEBUG_H_

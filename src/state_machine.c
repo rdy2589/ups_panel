@@ -86,7 +86,7 @@ void main_state_task(int64_t itime)
                 gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 lcd_test();
                 panel_to_pb_transmit("Hello from Panel!\n", 20);
-
+                panel_receieve();
                 sound_(0);
 
             }
