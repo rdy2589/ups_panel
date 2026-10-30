@@ -36,6 +36,7 @@ typedef struct {
 uint8_t panel_to_pb_transmit(uint8_t* buf, uint16_t len);
 void init_panel_USART(uint32_t baudrate);
 void panel_receieve(void);
+int ifPanelMsg(void);
 
 #endif
 #endif // _DEBUG_H_

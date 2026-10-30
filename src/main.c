@@ -12,7 +12,9 @@
 #include "common_type.h"
 #include "lcd.h"
 #include "usart.h"
+#include "global.h"
 
+struct pb_msg_t pbReceieved;
 
 void one_sec_task(int64_t itime);
 

@@ -38,3 +38,5 @@ enum mains_state_t mainsStartupState = MAINS_STATE_UNKNOWN;
 enum relay_state_t fSwitchRelay = READY_TO_SWITCH;
 
 int debug_i2c = 0;
+int debug_rx_mei = 0;
+int debug_rx_piv = 0;

@@ -9,6 +9,8 @@
 
 #include "systick.h"
 
+#include "mei.h"
+
 
 uint8_t rxbuffer[256];
 uint8_t receive_flag = 0;
@@ -27,6 +29,9 @@ static uint32_t arr_size     = UART_TX_BUFFER_SIZE;
 char rx_array_data[UART_TX_BUFFER_SIZE];
 char *pRX_data = rx_array_data;
 #endif
+
+extern struct mei_buf_t buf0;
+extern struct mei_buf_t buf1;
 
 
 volatile Buffer_t txBuf;
@@ -73,7 +78,24 @@ volatile Buffer_t txBuf;
                     
                     /* number of data received */
                     rx_count = 256 - (dma_transfer_number_get(DMA0, DMA_CH5));
-                    receive_flag = 1;
+                    
+                    if((!buf0.filled) && (!buf0.mutex))
+                    {
+                        buf0.mutex = 1;
+                        memcpy(buf0.data, rxbuffer, rx_count);
+                        buf0.len = rx_count;
+                        buf0.filled = 1;
+                        buf0.mutex = 0;
+                        receive_flag = 1;
+                    } else if((!buf1.filled) && (!buf1.mutex))
+                    {
+                        buf1.mutex = 1;
+                        memcpy(buf1.data, rxbuffer, rx_count);
+                        buf0.len = rx_count;
+                        buf1.filled = 1;
+                        buf1.mutex = 0;
+                        receive_flag = 1;
+                    }
                     
                     /* disable DMA and reconfigure */
                     dma_channel_disable(DMA0, DMA_CH5);
@@ -361,14 +383,14 @@ uint8_t panel_to_pb_transmit(uint8_t* buf, uint16_t len)
     #if PANEL_USART_TX_DMA == 1
         if (txBuf.state == BUSY) {
             printf("USART is busy\n");
-            return 1;
+            return 1; //ERR
         }
         memcpy(txBuf.buffer, buf, len);
         txBuf.block_len = len;
         UART_Transmit_DMA(huart, txBuf.buffer, txBuf.block_len);
         printf("DMA transfer start, size: %d\n", txBuf.block_len);
 
-        return 0;
+        return 0; //OK
     #endif
 
 }
@@ -394,6 +416,17 @@ void panel_receieve(void)
         if(1 == receive_flag) {
             printf("DMA receieve size: %d [%s]\n", rx_count, rxbuffer);
             receive_flag = 0;
+            //decode mei protocol
         }
     #endif
+}
+//return: 1 - message receieved 
+int ifPanelMsg(void)
+{
+    if(1 == receive_flag) {
+        //printf("DMA receieve size: %d [%s]\n", rx_count, rxbuffer);
+        receive_flag = 0;
+        return 1;
+    }
+    return 0;
 }

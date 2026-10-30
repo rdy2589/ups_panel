@@ -25,4 +25,12 @@ void lcd_putc(char c);                                  /* в текущую п�
 void lcd_puts(uint8_t col, uint8_t row, const char *s); /* строка одним пакетом I2C */
 void lcd_clear(void);
 
+/* ---- Шрифт 8x16 (высота 2 банка) ---- */
+#define FONT16_CELL_WIDTH 8U                                   /* 7 точек глиф + 1 интервал */
+#define FONT16_HEIGHT     16U
+#define LCD_COLS16        (LCD_WIDTH_PX / FONT16_CELL_WIDTH)   /* 16 символов в строке */
+
+void lcd_set_xy(uint8_t x, uint8_t bank);               /* X в пикселях, bank 0..3 */
+void lcd_puts16(uint8_t col, uint8_t row, const char *s); /* col: 0..15, row: 0..2 */
+
 #endif

@@ -104,7 +104,10 @@ void lcd_test(void)
     int16_t enc_position = enc_get_position();
     char buf[100] = {0};
     sprintf(buf, "Hello, World! %d", enc_position);
-    lcd_puts(3, 0, buf);
+  //  lcd_puts(3, 0, buf);
+
+    lcd_puts16(0, 0, "U=12,5 A");   /* строка 0 (банки 0-1) */
+    lcd_puts16(0, 2, "P=1.8 W");    /* строка 2 (банки 2-3) */
 }
 
 void lcd_init(void)

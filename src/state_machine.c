@@ -17,6 +17,8 @@
 #include "encoder.h"
 #include "usart.h"
 
+extern void periodic_read_mei_buf(int64_t itime);
+
 extern uint16_t voltageRMSBuffer[SIN_TABLE_SIZE];
 
 uint16_t mainsStartupCount = 0;
@@ -86,7 +88,9 @@ void main_state_task(int64_t itime)
                 gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 lcd_test();
                 panel_to_pb_transmit("Hello from Panel!\n", 20);
-                panel_receieve();
+
+                //panel_receieve();
+                periodic_read_mei_buf(itime);
                 sound_(0);
 
             }
