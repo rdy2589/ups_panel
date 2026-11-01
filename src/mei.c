@@ -10,7 +10,7 @@
 
 #include "input_data.h"
 
-extern int exec_piv_msg(int64_t itime, uint8_t * buf, uint32_t buf_len);
+extern int exec_piv_msg(int64_t itime, uint8_t * buf, uint32_t msg_type, uint32_t buf_len);
 
 
 
@@ -96,6 +96,16 @@ int send_mei_msg(uint8_t msg_type, uint8_t * msg, uint32_t msg_len)
     ptr = put_in_buf(ptr, 0xAA);
     ptr = put_in_buf(ptr, 0x03);
     len += 2;
+
+    if(1)
+    {
+        printf("%s(%u) len %d :", __FUNCTION__, __LINE__, len);
+        for(int i = 0; i < (int)len; ++i)
+        {
+            printf(" %02X", serial_buf[i]);
+        }
+        printf("\n");
+    }
 
     if(panel_to_pb_transmit(serial_buf, len) == ERR) return ERR;
     return OK;
@@ -268,7 +278,7 @@ int exec_mei_msg(uint8_t * m, uint32_t mi, uint32_t msg_type, uint32_t msg_len, 
 
 
     int res;
-    if(ERR == (res = exec_piv_msg(itime, m, (msg_len + 1))))
+    if(ERR == (res = exec_piv_msg(itime, m, msg_type, (msg_len + 1))))
     {
         print_time_s_ns(itime);
         printf(" %s() ", __func__);

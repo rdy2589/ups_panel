@@ -16,6 +16,7 @@
 #include "state_machine.h"
 #include "encoder.h"
 #include "usart.h"
+#include "input_data.h"
 
 extern void periodic_read_mei_buf(int64_t itime);
 
@@ -87,9 +88,32 @@ void main_state_task(int64_t itime)
                 printf("%s() [%u] %u\n", __func__, systemState, cnt);
                 gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 lcd_test();
-                panel_to_pb_transmit("Hello from Panel!\n", 20);
+                //panel_to_pb_transmit("Hello from Panel!\n", 20);
 
                 //panel_receieve();
+
+
+                uint8_t buf[20];
+                int len = 0;
+                //little endian style
+                int i = 0;
+                buf[i++] = 0x01; // message updated
+                buf[i++] = 0x22; // state low byte
+                buf[i++] = 0x11; // state high byte
+                buf[i++] = 2201 & 0xFF; // uMains low byte
+                buf[i++] = 2201 >> 8; // uMains high byte
+                buf[i++] = 2302 & 0xFF; // uInvertor low byte
+                buf[i++] = 2302 >> 8; // uInvertor high byte
+                buf[i++] = 2403 & 0xFF; // iInvertor low byte
+                buf[i++] = 2403 >> 8; // iInvertor high byte
+                buf[i++] = 2504 & 0xFF; // uBattery low byte 
+                buf[i++] = 2504 >> 8; // uBattery high byte
+                buf[i++] = 2605 & 0xFF; // iBattery low byte
+                buf[i++] = 2605 >> 8; // iBattery high byte
+                
+        
+                send_piv_msg(itime, 0x55, buf, i);
+
                 periodic_read_mei_buf(itime);
                 sound_(0);
 

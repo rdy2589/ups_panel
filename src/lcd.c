@@ -212,7 +212,7 @@ void i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length)
         }
     }
     i2c_end_write();
-    printf("\n");
+     if(debug_i2c) printf("\n");
 }
 
 void lcd_en_backlight(void)
