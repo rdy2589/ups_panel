@@ -23,12 +23,14 @@ int send_piv_msg(int64_t itime, uint8_t msg_type, uint8_t * msg, uint32_t msg_le
 
 
 
-void periodic_read_mei_buf(int64_t itime)
+int periodic_read_mei_buf(int64_t itime)
 {
+    //if message in buffer
     if(ifPanelMsg())
     {
-        read_HW_mei_fifo(itime);
+        return read_HW_mei_fifo(itime);
     }
+    return NO_RES;
 }
 
 
@@ -37,29 +39,20 @@ void periodic_read_mei_buf(int64_t itime)
 
 int unpack_msg(int64_t itime, uint32_t msg_type, uint8_t * buf, struct pb_msg_t *msg)
 {
-   uint8_t it = 0;
-   //skip msg_type
-//    msg->type = (uint8_t)msg_type; it++;
-//    msg->updated = buf[it]; it++;   
-//    msg->state = (uint16_t)buf[it++]<<8;  it += 2;
-//    msg->uMains = (uint16_t)buf[it]; it += 2;
-//    msg->uInvertor = (uint16_t)buf[it]; it += 2;
-//    msg->iInvertor = (uint16_t)buf[it]; it += 2;
-//    msg->uBattery = (uint16_t)buf[it]; it += 2;
-//    msg->iBattery = (uint16_t)buf[it];
-//    msg->updated = 1;
-
-   msg->type = (uint8_t)msg_type; buf++;
-   msg->updated = *buf++;   
-   msg->state = *(uint16_t*)buf; buf += 2;
-   msg->uMains = *(uint16_t*)buf; buf += 2;
-   msg->uInvertor = *(uint16_t*)buf; buf += 2;
-   msg->iInvertor = *(uint16_t*)buf; buf += 2;
-   msg->uBattery = *(uint16_t*)buf; buf += 2;
-   msg->iBattery = *(uint16_t*)buf;
-   msg->updated = 1;
-
-   return OK;
+    uint8_t it = 0;
+    if(msg_type == 0x55)
+    {
+        msg->type = (uint8_t)msg_type; buf++;
+        msg->state = *(uint16_t*)buf; buf += 2;
+        msg->uMains = *(uint16_t*)buf; buf += 2;
+        msg->uInvertor = *(uint16_t*)buf; buf += 2;
+        msg->iInvertor = *(uint16_t*)buf; buf += 2;
+        msg->uBattery = *(uint16_t*)buf; buf += 2;
+        msg->iBattery = *(uint16_t*)buf;
+        msg->updated = 1;
+        return OK;
+    }
+   return ERR;
 }
 
 

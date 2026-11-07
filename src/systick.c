@@ -41,7 +41,7 @@ OF SUCH DAMAGE.
 int64_t   sysctrl_tick_time_ns = ((1.0 / 120000000) * NS_PER_SEC);
 
 
-volatile static uint32_t delay;
+static volatile uint32_t delay;
 volatile uint64_t sys_time = 0;
 
 /*!

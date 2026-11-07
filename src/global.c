@@ -39,4 +39,11 @@ enum relay_state_t fSwitchRelay = READY_TO_SWITCH;
 
 int debug_i2c = 0;
 int debug_rx_mei = 1;
-int debug_rx_piv = 1;
+int debug_rx_piv = 0;
+
+
+
+
+
+
+struct inverter_state_t inverterState;

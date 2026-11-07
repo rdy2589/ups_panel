@@ -13,6 +13,7 @@
 #define ENC_TIMER       TIMER2
 #define ENC_TIMER_RCU   RCU_TIMER2
 
+
 void enc_init(void);
 int16_t enc_get_position(void);
 

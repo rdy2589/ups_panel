@@ -115,4 +115,47 @@ struct ac_input_state_t
     int invPeriodAdj;
 };
 
+enum inv_mode_t {
+    INV_MODE_UNKNOWN = 0,
+    INV_MODE_LINE,
+    INV_MODE_BATTERY
+};
+
+enum batt_t {
+    BATT_UNKNOWN = 0,
+    BATT_NOT_OK,
+    BATT_OK,
+    BATT_LOW,
+    BATT_HIGH,
+};
+
+enum mlf_t {
+    MLF_UNKNOWN = 0,
+    MLF_NOT_OK,
+    MLF_OK
+};
+
+struct inverter_state_t {
+    uint8_t updated;
+    enum inv_mode_t mode;
+    enum batt_t battery;
+    enum mlf_t mlf;         //common mallfunction
+    enum mlf_t mlf_ovh;     //overheat malfunction
+    enum mlf_t mlf_bat;     //battery malfunction
+};
+
+
+struct pb_msg_t {
+    uint8_t updated;
+    uint8_t type;
+    uint16_t state;     //replace with separated values later
+    uint16_t uMains;
+    uint16_t uInvertor;
+    uint16_t iInvertor;
+    uint16_t uBattery;
+    uint16_t iBattery;
+};
+
+
+
 #endif

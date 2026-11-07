@@ -49,16 +49,8 @@ enum {
     NO_RES,
 };
 
-struct pb_msg_t {
-    uint8_t updated;
-    uint8_t type;
-    uint16_t state;     //replace with separated values later
-    uint16_t uMains;
-    uint16_t uInvertor;
-    uint16_t iInvertor;
-    uint16_t uBattery;
-    uint16_t iBattery;
-};
+
+extern struct inverter_state_t inverterState;
 
 extern int debug_i2c;
 extern int debug_rx_mei;

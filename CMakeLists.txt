@@ -89,7 +89,7 @@ target_sources(${TARGET} PRIVATE
     ${CMAKE_SOURCE_DIR}/src/mei.c
     ${CMAKE_SOURCE_DIR}/src/input_data.c
     ${CMAKE_SOURCE_DIR}/src/crc16.c
-    #${CMAKE_SOURCE_DIR}/src/.c
+    ${CMAKE_SOURCE_DIR}/src/ui.c
 
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/ARM/startup_gd32f30x_hd.S
     ${CMAKE_SOURCE_DIR}/CMSIS/GD/GD32F30x/Source/system_gd32f30x.c

@@ -9,7 +9,7 @@
 #include "encoder.h"
 
 #define ENC_TIMER_RELOAD        0xFFFFU
-#define ENC_TIMER_INPUT_FILTER  0x03U
+#define ENC_TIMER_INPUT_FILTER  0x06U//0x03U
 
 void enc_init(void)
 {
