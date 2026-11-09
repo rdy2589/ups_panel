@@ -48,7 +48,7 @@ int main(void)
     int64_t itime = get_itime();
 
     reg_task("OneSecTask",     &one_sec_desc,          0 ms,   1000 ms,  0, itime, one_sec_task );
-    reg_task("MainStateTask",  &main_state_desc,       0 ms,   1 ms,     0, itime, main_state_task );
+    reg_task("MainStateTask",  &main_state_desc,       0 ms,   10 ms,     0, itime, main_state_task );
 
 
         /* turn on P29, turn off led5 */

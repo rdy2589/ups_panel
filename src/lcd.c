@@ -144,13 +144,16 @@ void lcd_init(void)
     };
 
 
-
-
-
-
-
     printf("%s()\n", __func__);
-    
+
+    //!!!reset first
+    rcu_periph_clock_enable(RCU_GPIOC);
+    gpio_bit_reset(RESET_lcd_gpio, RESET_lcd_pin);
+    Delay_Ms(100);
+    gpio_bit_set(RESET_lcd_gpio, RESET_lcd_pin);
+    Delay_Ms(10);
+
+
     //i2c pins
     rcu_periph_clock_enable(RCU_GPIOB);
     rcu_periph_clock_enable(RCU_AF);
@@ -166,14 +169,11 @@ void lcd_init(void)
     gpio_init(RESET_lcd_gpio, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, RESET_lcd_pin);
     Delay_Ms(10);
     
-    gpio_bit_reset(RESET_lcd_gpio, RESET_lcd_pin);
-    Delay_Ms(100);
-    gpio_bit_set(RESET_lcd_gpio, RESET_lcd_pin);
-    Delay_Ms(10);
+
 
     i2c_deinit(I2C0);
     /* cofigure I2C clock */
-    i2c_clock_config(I2C0, 50000, I2C_DTCY_2);//I2C_DTCY_16_9
+    i2c_clock_config(I2C0, 400000, I2C_DTCY_2);//I2C_DTCY_16_9
     /* cofigure I2C address */
     i2c_mode_addr_config(I2C0, I2C_I2CMODE_ENABLE, I2C_ADDFORMAT_7BITS, I2C0_OWN_ADDRESS7);
     /* enable I2C0 */

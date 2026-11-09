@@ -50,6 +50,8 @@ void main_state_task(int64_t itime)
             ui_init();
             relay_config();
             led_config();
+            btn_led_config();
+            ext_input_config();
 
             inverterState.mode = INV_MODE_UNKNOWN;
             inverterState.battery = BATT_UNKNOWN;
@@ -87,8 +89,8 @@ void main_state_task(int64_t itime)
             uint8_t btn_sw_state = gpio_input_bit_get(ENC_gpio, ENCSW_pin);
 
             // Логика выделения переднего фронта нажатия (клик)
-            if (btn1_state == 0 && btn1_prev == 1) { btn1_pressed = 1; sound_(5); }
-            if (btn2_state == 0 && btn2_prev == 1) btn2_pressed = 1;
+            if (btn1_state == 0 && btn1_prev == 1) { btn1_pressed = 1; sound_(settings_values[5].value, 100); }
+            if (btn2_state == 0 && btn2_prev == 1) { btn2_pressed = 1; sound_(settings_values[5].value, 100); }
             if (btn_sw_state == 0 && btn_sw_prev == 1) btn_sw_pressed = 1;
 
             btn1_prev = btn1_state;
@@ -99,26 +101,28 @@ void main_state_task(int64_t itime)
             ui_update(enc_diff, btn1_pressed, btn2_pressed, btn_sw_pressed);
 
 
-            if(settings_values[3].value == 1) lcd_en_backlight();
-            else lcd_dis_backlight();
-
-
-
+            if(settings_values[4].value == 1) 
+            {
+                btn_led_enable();
+                lcd_en_backlight();
+            }
+            else
+            {
+                lcd_dis_backlight();
+                btn_led_disable();
+            }
 
             cnt++;
             if(cnt > 10000) cnt = 0;
             if(!cnt)
             {
-                
                 int64_t tm = get_sys_time_ns();
                 print_time_s_ns(tm);
                 printf("%s() [%u] %u\n", __func__, systemState, cnt);
-                //gpio_output_bit_get(GPIOB, GPIO_PIN_15) ? lcd_dis_backlight() : lcd_en_backlight();
                 //lcd_test();
                 //panel_to_pb_transmit("Hello from Panel!\n", 20);
 
                 //panel_receieve();
-
 
                 uint8_t buf[20];
                 int len = 0;
@@ -136,7 +140,6 @@ void main_state_task(int64_t itime)
                 buf[i++] = 2504 >> 8; // uBattery high byte
                 buf[i++] = 2605 & 0xFF; // iBattery low byte
                 buf[i++] = 2605 >> 8; // iBattery high byte
-                
         
                 send_piv_msg(itime, 0x55, buf, i);
             }
@@ -155,14 +158,18 @@ void main_state_task(int64_t itime)
 //pbReceieved.updated = 1;
 //unpackState(pbReceieved.state, &inverterState);
 
-inverterState.mode = INV_MODE_BATTERY;
+//inverterState.mode = INV_MODE_BATTERY;
 inverterState.mlf_bat = MLF_NOT_OK;
 //inverterState.mlf_ovh = MLF_NOT_OK;
 
             sound_proceed();
             relayProceed();
             led_proceed();
-
+            
+        if(!gpio_output_bit_get(GPIOD, GPIO_PIN_8))
+            gpio_bit_set(GPIOD, GPIO_PIN_8);
+        else
+            gpio_bit_reset(GPIOD, GPIO_PIN_8); 
             
         break;
         case BATTERY_CHARGER_MODE:   //battery charger mode
@@ -322,5 +329,21 @@ void led_proceed(void)
     else
     {
         led_ovh_disable();
+    }
+}
+
+void ext_input_proceed(void)
+{
+    if(!get_ext_start()) 
+    {
+        //ext start enabled
+        inverterState.mode = INV_MODE_BATTERY;
+    }
+    else {
+        inverterState.mode = INV_MODE_LINE;
+    }
+    if(!get_ext_block())
+    {
+        //ext block enabled
     }
 }

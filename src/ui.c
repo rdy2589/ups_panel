@@ -21,9 +21,10 @@ static const char* menu_items[] = {
     "1. Max Volt Thr",
     "2. Min Volt Thr",
     "3. Min Bat Volt",
-    "4. Backlight Tm",
-    "5. Charger Cur ",
-    "6. Exit Menu   "
+    "4. Charger Cur ",
+    "5. Backlight Tm",
+    "6. Sound",
+    "7. Exit Menu   "
 };
 
 #define MENU_ITEMS_COUNT (sizeof(menu_items) / sizeof(menu_items[0]))
@@ -34,8 +35,9 @@ struct item_t settings_values[MENU_ITEMS_COUNT] = {
      { 215, 200, 220, ITEM_IS_NUMERIC, NULL, NULL},
      { 225, 220, 240, ITEM_IS_NUMERIC, NULL, NULL},
      { 21, 18, 27, ITEM_IS_NUMERIC, NULL, NULL },
+     { 3, 1, 5, ITEM_IS_NUMERIC, NULL, NULL }, // "4. Charger Cur ",
      { 1, 0, 1, ITEM_IS_TEXT, "Off", "On" },
-     { 3, 1, 5, ITEM_IS_NUMERIC, NULL, NULL },
+     { 1, 0, 1, ITEM_IS_TEXT, "Off", "On" },
      { 0, 0, 1, ITEM_IS_NUMERIC, NULL, NULL }
 };
 

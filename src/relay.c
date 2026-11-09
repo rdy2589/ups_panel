@@ -8,13 +8,13 @@
 
 uint16_t sound_timer = 0;
 
-void sound_(uint16_t time_ms)
+void sound_(uint16_t enabled, uint16_t time_ms)
 {
     //static uint16_t beep_time_ms = 0;
-
+    if(enabled == 1)
     if(time_ms && !sound_timer)
     {
-        sound_timer = time_ms;
+        sound_timer = time_ms / 10;
     }
 }
 
@@ -102,8 +102,29 @@ void led_bat_mlf_disable(void)
     gpio_bit_reset(LED_gpio, LED_BAT_MLF_pin);
 }
 
+void btn_led_enable(void)
+{
+    gpio_bit_set(LED_gpio, LED_SW_ON_pin);
+    gpio_bit_set(LED_gpio, LED_SW_ENTER_pin);
+    gpio_bit_set(LED_gpio, LED_SW_ESC_pin);
+}
 
+void btn_led_disable(void)
+{
+    gpio_bit_reset(LED_gpio, LED_SW_ON_pin);
+    gpio_bit_reset(LED_gpio, LED_SW_ENTER_pin);
+    gpio_bit_reset(LED_gpio, LED_SW_ESC_pin);
+}
 
+uint8_t get_ext_start(void)
+{
+    return gpio_input_bit_get(EXT_INPUT_gpio, EXT_START_pin);
+}
+ 
+uint8_t get_ext_block(void)
+{
+    return gpio_input_bit_get(EXT_INPUT_gpio, EXT_BLOCK_pin);
+}
 
 
 void relay_config(void)
@@ -123,6 +144,19 @@ void led_config(void)
     printf("%s()\n", __func__);
 }
 
+void btn_led_config(void)
+{
+    rcu_periph_clock_enable(RCU_GPIOE);
+    gpio_init(LED_gpio, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, LED_SW_ON_pin | LED_SW_ENTER_pin | LED_SW_ESC_pin);
+    printf("%s()\n", __func__);
+}
+
+void ext_input_config(void)
+{
+    rcu_periph_clock_enable(RCU_GPIOB);
+    gpio_init(EXT_INPUT_gpio, GPIO_MODE_IPU, GPIO_OSPEED_50MHZ, EXT_START_pin | EXT_BLOCK_pin);
+    printf("%s()\n", __func__);
+}
 
 void sound_config(void)
 {
@@ -130,5 +164,5 @@ void sound_config(void)
     
     gpio_init(GPIOB, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_14);
     printf("%s()\n", __func__);
-    sound_(0);
+    //sound_(0);
 }

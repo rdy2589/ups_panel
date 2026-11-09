@@ -999,12 +999,14 @@ void DMA2_Channel4_IRQHandler(void)
     void debug_pin_config(void)
     {
         printf("%s()\n", __func__);
-        rcu_periph_clock_enable(RCU_GPIOA);
-        rcu_periph_clock_enable(RCU_GPIOB);
-        rcu_periph_clock_enable(RCU_GPIOC);
-        gpio_init(GPIOA, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_8 | GPIO_PIN_11);
-        gpio_init(GPIOB, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_4 | GPIO_PIN_6 | GPIO_PIN_14);
-        gpio_init(GPIOC, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_12);
+        //rcu_periph_clock_enable(RCU_GPIOA);
+        //rcu_periph_clock_enable(RCU_GPIOB);
+        //rcu_periph_clock_enable(RCU_GPIOC);
+        //gpio_init(GPIOA, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_8 | GPIO_PIN_11);
+       // gpio_init(GPIOB, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_6);
+        //gpio_init(GPIOC, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_12);
+        rcu_periph_clock_enable(RCU_GPIOD);
+        gpio_init(GPIOD, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_8);
     }
 
 #endif
