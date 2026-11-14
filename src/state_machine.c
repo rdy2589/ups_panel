@@ -165,6 +165,7 @@ inverterState.mlf_bat = MLF_NOT_OK;
             sound_proceed();
             relayProceed();
             led_proceed();
+            ext_input_proceed();
             
         if(!gpio_output_bit_get(GPIOD, GPIO_PIN_8))
             gpio_bit_set(GPIOD, GPIO_PIN_8);

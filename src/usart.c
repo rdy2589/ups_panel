@@ -36,13 +36,13 @@ extern struct mei_buf_t buf1;
 
 volatile Buffer_t txBuf;
 #if(UPANEL_USART ==  0)
-    uint32_t huart = USART0;
+    static uint32_t huart = USART0;
 #endif
 #if(UPANEL_USART ==  1)
-    uint32_t huart = USART1;
+    static uint32_t huart = USART1;
 #endif
 #if(UPANEL_USART ==  5)
-    uint32_t huart = USART5;
+    static uint32_t huart = USART5;
 #endif
 #if(UPANEL_USART ==  2)
     static uint32_t huart = USART2;

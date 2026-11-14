@@ -30,10 +30,10 @@ char *pRX_data = rx_array_data;
         static uint32_t huart = USART0;
     #endif
     #if(DEBUG ==  DEBUG_UART1)
-        USART_TypeDef *huart = USART1;
+        static USART_TypeDef *huart = USART1;
     #endif
     #if(DEBUG ==  DEBUG_UART5)
-        USART_TypeDef *huart = UART5;
+        static USART_TypeDef *huart = UART5;
     #endif
 #endif
 

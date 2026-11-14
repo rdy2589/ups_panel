@@ -16,5 +16,6 @@ void batteryChargerTurnOnRoutine(void);
 void unpackState(uint16_t state, struct inverter_state_t *inverterState);
 void relayProceed(void);
 void led_proceed(void);
+void ext_input_proceed(void);
 
 #endif
