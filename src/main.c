@@ -11,6 +11,8 @@
 #include "state_machine.h"
 #include "common_type.h"
 #include "lcd.h"
+#include "usart.h"
+#include "global.h"
 
 
 void one_sec_task(int64_t itime);
@@ -33,6 +35,8 @@ void system_init(void)
     //init_USART_printf(115200);
     init_USART_printf(250000);
     debug_pin_config(); 
+
+    init_panel_USART(250000);
 }
 
 
@@ -44,7 +48,7 @@ int main(void)
     int64_t itime = get_itime();
 
     reg_task("OneSecTask",     &one_sec_desc,          0 ms,   1000 ms,  0, itime, one_sec_task );
-    reg_task("MainStateTask",  &main_state_desc,       0 ms,   1 ms,     0, itime, main_state_task );
+    reg_task("MainStateTask",  &main_state_desc,       0 ms,   10 ms,     0, itime, main_state_task );
 
 
         /* turn on P29, turn off led5 */

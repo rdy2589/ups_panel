@@ -81,7 +81,7 @@ typedef struct {
 } RingBuffer;
 
 void uartStartTxDMA(uint32_t huart, RingBuffer *rb);
-void UART_Transmit_DMA(uint32_t huart, uint8_t *data, uint16_t size);
+void USART_Transmit_DMA(uint32_t huart, uint8_t *data, uint16_t size);
 int32_t ringBufferPut(RingBuffer *rb, uint8_t data);
 void UART_DMA_Init(void);
 void DMA_Interrupt_Init(void);

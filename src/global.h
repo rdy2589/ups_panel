@@ -42,4 +42,18 @@ enum{
     CALCULATION_DONE = 2
 };
 
+
+enum {
+    OK = 0,
+    ERR,
+    NO_RES,
+};
+
+
+extern struct inverter_state_t inverterState;
+
+extern int debug_i2c;
+extern int debug_rx_mei;
+extern int debug_rx_piv;
+
 #endif
